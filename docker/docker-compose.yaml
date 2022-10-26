@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  old_py:
+    build:
+      context: pyperf/image
+      args:
+        pyversion: ${OLD_PY_VERSION}
+    container_name: old_python
+    entrypoint: pyperformance run -r -o /opt/old.json
+    env_file:
+      - .env
+    volumes:
+      - ./results:/opt/
+
+  new_py:
+    build:
+      context: pyperf/image
+      args:
+        pyversion: ${NEW_PY_VERSION}
+    env_file:
+      - .env
+    container_name: new_python
+    entrypoint: pyperformance run -r -o /opt/new.json
+    volumes:
+      - ./results:/opt/
+
+  compare:
+    build: 
+      context: compare/image/
+      args:
+        pyversion: ${NEW_PY_VERSION}
+    env_file:
+      - .env
+    container_name: compare
+    deploy:
+      restart_policy:
+          condition: on-failure
+          delay: 60s
+          max_attempts: 100
+    volumes:
+      - ./results:/opt/
