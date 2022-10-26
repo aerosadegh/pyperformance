@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -35,3 +34,32 @@ ax.set(
 plt.savefig("/opt/output/Compare.png", dpi=300)
 
 df.to_csv("/opt/output/speed_up.csv", index=False)
+
+
+# Details
+
+fig, ax = plt.subplots(figsize=(13, 20))
+labels = df.function
+widths = df.speed_up
+
+ax.grid(True)
+ax.set_xlim(0.75, 2)
+
+
+my_cmap = plt.get_cmap('seismic_r')
+rescale = lambda y: y-0.5
+
+rects = ax.barh(labels, widths, color=my_cmap(rescale(widths)), height=0.8, label="AA")
+
+ax.bar_label(rects, label_type='edge')
+
+ax.set(
+    xlabel="Speedup (times)",
+    title=f"Python {OLD_PY} vs. Python {NEW_PY} - speedup comparison in modules",
+)
+plt.margins(0.01, 0.01)
+
+plt.rcParams['font.size'] = 16
+
+fig.savefig("/opt/output/details.jpg", dpi=300, bbox_inches='tight')
+fig.show()
