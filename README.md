@@ -3,7 +3,7 @@
 ## 1. Prepare Test Results
 ```bash
 cd docker
-docker-compose.yaml up -d
+docker-compose up -d
 ```
 Note: This step can take longer than 1 hour.
 
